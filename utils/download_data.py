@@ -1,3 +1,6 @@
+"""
+    Downloads raw SINAN dengue datasets (2020–2024) and saves each year as a parquet file in data/raw/.
+"""
 import gc
 import os
 
