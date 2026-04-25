@@ -65,9 +65,11 @@ def treat(df: pd.DataFrame) -> pd.DataFrame:
         df["age_years"] = decodifica_idade_SINAN(df["NU_IDADE_N"], "Y")
         df = df.drop(columns=["NU_IDADE_N"])
 
-    # ── 4. epi_week: semana epidemiológica do primeiro sintoma (SEM_PRI % 100) ─
+    # ── 4. ano e epi_week derivados de SEM_PRI (formato YYYYWW) ──────────────
     if "SEM_PRI" in df.columns:
-        df["epi_week"] = (_to_numeric(df["SEM_PRI"]) % 100).astype("float32")
+        sem = _to_numeric(df["SEM_PRI"])
+        df["year"]      = (sem // 100).astype("Int16")
+        df["epi_week"] = (sem % 100).astype("float32")
         df = df.drop(columns=["SEM_PRI"])
 
     # ── 5. Códigos ignorado → NA ──────────────────────────────────────────────
