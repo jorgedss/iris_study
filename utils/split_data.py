@@ -15,7 +15,7 @@ OUTPUT_DIR = "data/features/baseline"
 TRAIN_YEARS = [2020, 2021, 2022, 2023]
 TEST_YEARS  = [2024]
 TARGET_COL  = "target"
-SPLIT_COL   = "ano"
+SPLIT_COL   = "year"
 
 
 def main():
@@ -36,8 +36,9 @@ def main():
     train = df[df[SPLIT_COL].isin(TRAIN_YEARS)].copy()
     test  = df[df[SPLIT_COL].isin(TEST_YEARS)].copy()
 
-    # ano foi usado apenas para o split — não é feature
-    feature_cols = [c for c in df.columns if c not in [TARGET_COL, SPLIT_COL]]
+    # year é mantido em X para permitir expanding window nos notebooks de modelo
+    # deve ser dropada antes do fit — não é feature
+    feature_cols = [c for c in df.columns if c != TARGET_COL]
 
     X_train = train[feature_cols]
     y_train = train[TARGET_COL]
