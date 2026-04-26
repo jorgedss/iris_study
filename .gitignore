@@ -12,3 +12,4 @@ wheels/
 # Files and directories to ignore
 CLAUDE.md
 data
+/output
