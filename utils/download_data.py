@@ -55,7 +55,7 @@ def download_year(sinan, year: int, partitions_limit: int = 60):
 
 if __name__ == "__main__":
     sinan = SINAN().load()
-    years = [2020, 2021, 2022, 2023, 2024]
+    years = [2020, 2021, 2022, 2023, 2024,2025]
 
     for year in years:
         download_year(sinan, year)
