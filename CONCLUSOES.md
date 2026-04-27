@@ -168,7 +168,31 @@ Avaliou RL, LDA, Naive Bayes, Decision Tree e RF para risco de dengue em bairros
 
 ---
 
-## 4. Posicionamento do Projeto na Literatura
+## 4. Verificações de Robustez do Modelo Final
+
+### Encoding de SG_UF — experimento controlado
+
+A variável `SG_UF` (unidade federativa) foi codificada com `OrdinalEncoder` no pipeline da Regressão Logística, atribuindo inteiros arbitrários a cada estado. Em modelos lineares, esse encoding é tecnicamente inadequado para variáveis nominais, pois impõe uma ordenação sem significado semântico entre os estados.
+
+Para avaliar o impacto real dessa limitação, foi conduzido um experimento controlado com três variantes do modelo tuned (C=10, L2, lbfgs), mantendo todos os demais hiperparâmetros e dados idênticos:
+
+| Variante | Sensibilidade | AUPRC | ROC-AUC | Δ Sensibilidade | Δ AUPRC | Δ ROC-AUC |
+|---|---|---|---|---|---|---|
+| OrdinalEncoder (original) | 0,8008 | 0,6250 | 0,9242 | — | — | — |
+| OneHotEncoder (corrigido) | 0,8079 | 0,6194 | 0,9207 | +0,0071 | −0,0056 | −0,0035 |
+| Sem SG_UF | 0,8008 | 0,6254 | 0,9243 | +0,0000 | +0,0004 | +0,0001 |
+
+**Achados:**
+- Corrigir o encoding para `OneHotEncoder` adiciona 26 features esparsas (60 → 86) e **piora** as métricas prioritárias (AUPRC −0,006; ROC-AUC −0,004), provavelmente porque as features estaduais esparsas introduzem ruído que a regularização L2 não amortece completamente.
+- Remover completamente `SG_UF` tem impacto desprezível em todas as métricas (ΔSensibilidade = 0,0000; ΔAUPRC = +0,0004; ΔROC-AUC = +0,0001).
+
+**Conclusão:** `SG_UF` não contribui para o poder preditivo do modelo independentemente do encoding utilizado. O risco de óbito por dengue grave é explicado pelos sinais clínicos e características do paciente, não pela localização geográfica de notificação. A limitação de encoding não invalida o modelo final — o `OrdinalEncoder` atua como regularizador implícito, comprimindo a informação geográfica em um único coeficiente de baixo impacto.
+
+Notebook de referência: `04_validation/lr_uf_encoding_comparison.ipynb`
+
+---
+
+## 5. Posicionamento do Projeto na Literatura
 
 **Contribuições originais em relação ao estado da arte:**
 
