@@ -59,6 +59,7 @@ Testadas todas as combinações possíveis de 2 a 5 modelos via média simples d
 ### Análises complementares
 - **Bootstrap (1.000 iterações):** intervalos de confiança 95% para sensibilidade, AUPRC e ROC-AUC — análise de suporte para quantificar a incerteza das estimativas de performance
 - **Validação externa 2025:** avaliação de robustez em contexto endêmico, com distribuição de severidade diferente do período de treino — critério decisivo para a escolha do modelo final
+- **Verificação de robustez — SG_UF:** experimento controlado avaliou o impacto da variável geográfica no modelo final (LR tuned). `SG_UF` foi codificada com `OrdinalEncoder` — encoding tecnicamente inadequado para variável nominal em modelo linear. Duas hipóteses foram testadas: (1) corrigir para `OneHotEncoder`; (2) remover completamente. A remoção completa resultou em impacto desprezível (ΔSensibilidade = 0.0000, ΔAUPRC = +0.0004, ΔROC-AUC = +0.0001), confirmando que o poder preditivo do modelo está nos sinais clínicos e não na localização geográfica do paciente. Notebook: `04_validation/lr_uf_encoding_comparison.ipynb`
 
 ---
 
